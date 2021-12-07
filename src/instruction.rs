@@ -1,7 +1,7 @@
 use std::convert::TryInto;
-use solana_program::program_error:ProgramError;
+use solana_program::program_error::ProgramError;
 
-use create:error:EscrowError::InvalidInstruction;
+use crate::error::EscrowError::InvalidInstruction;
 
 
 pub enum EscrowInstruction {
@@ -31,13 +31,13 @@ impl EscrowInstruction {
 
     Ok(match tag {
       0 => Self::InitEscrow {
-        amount: Self:unpack_amount(rest)?,
+        amount: Self::unpack_amount(rest)?,
       },
       _ => return Err(InvalidInstruction.into())
     })
   }
 
-  fun unpack_amount(input: &[u8]) -> Result<u64, ProgramError> {
+  fn unpack_amount(input: &[u8]) -> Result<u64, ProgramError> {
     let amount = input
       .get(..8)
       .and_then(|slice| slice.try_into().ok())
